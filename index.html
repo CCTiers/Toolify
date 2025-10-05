@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Utility Web Toolkit</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles and font setup */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        :root {
+            font-family: 'Inter', sans-serif;
+        }
+        .tab-button.active {
+            border-bottom: 3px solid #10b981; /* Emerald 500 */
+            color: #10b981;
+            font-weight: 600;
+        }
+        .tool-card {
+            background-color: #ffffff;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease-in-out;
+        }
+        /* Custom styles for better aesthetics */
+        body {
+            background-color: #f3f4f6; /* Light gray background */
+        }
+        .file-upload-box {
+            border: 2px dashed #9ca3af;
+            background-color: #f9fafb;
+            transition: all 0.2s;
+        }
+        .file-upload-box:hover {
+            border-color: #4b5563;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 sm:p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight">
+                🛠️ Web Toolkit Hub
+            </h1>
+            <p class="mt-2 text-lg text-gray-500">Simplify your online tasks with powerful utilities.</p>
+        </header>
+
+        <!-- Tab Navigation - Link Shortener removed -->
+        <nav class="flex border-b border-gray-200 mb-8 overflow-x-auto">
+            <button id="tab-converter" onclick="switchTab('converter')" class="tab-button active flex-1 py-3 px-4 text-center text-gray-600 hover:text-emerald-500 transition duration-150 ease-in-out whitespace-nowrap">
+                🖼️ Image Converter
+            </button>
+            <button id="tab-youtube" onclick="switchTab('youtube')" class="tab-button flex-1 py-3 px-4 text-center text-gray-600 hover:text-emerald-500 transition duration-150 ease-in-out whitespace-nowrap">
+                ▶️ YouTube Thumbnail
+            </button>
+        </nav>
+
+        <!-- Tool Content Area -->
+        <main>
+            
+            <!-- 1. Image Converter Tool (Now universal) -->
+            <div id="tool-converter" class="tool-content tool-card p-6 sm:p-8 rounded-xl">
+                <h2 class="text-2xl font-bold text-gray-700 mb-4">Image Converter (JPG, PNG, WEBP)</h2>
+                <p class="text-gray-500 mb-6">Convert images locally in the browser between common formats.</p>
+
+                <div class="space-y-4">
+                    <div class="file-upload-box p-6 text-center rounded-lg cursor-pointer" onclick="document.getElementById('image-file-input').click()">
+                        <input type="file" id="image-file-input" accept="image/png, image/jpeg, image/webp" class="hidden" onchange="handleImageSelection(event)">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 014 4v2a3 3 0 00-.704 2.378l-1.442 2.388c-.62.91-1.745 1.444-2.883 1.291L12 17.5l-3.328.455c-1.138.153-2.263-.381-2.883-1.291L4.704 14.378A3 3 0 004 12v-2a5 5 0 014-4c.48.04.97.106 1.45.201L10 8l-.01.01v6.99z" />
+                        </svg>
+                        <p class="mt-1 text-sm text-gray-600"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                        <p class="text-xs text-gray-500">PNG, JPEG, and WebP files supported (up to 5MB)</p>
+                        <p id="selected-file-name" class="mt-2 text-sm font-medium text-emerald-600"></p>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-4 items-end">
+                        <div class="w-full sm:w-1/2">
+                            <label for="output-format" class="block text-sm font-medium text-gray-700 mb-1">Select Output Format</label>
+                            <select id="output-format" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500">
+                                <option value="image/png">PNG (.png)</option>
+                                <option value="image/jpeg">JPEG (.jpg)</option>
+                                <option value="image/webp">WebP (.webp)</option>
+                            </select>
+                        </div>
+                        <button id="convert-button" onclick="convertImage()" disabled class="w-full sm:w-1/2 bg-gray-400 text-white p-3 rounded-lg font-semibold transition duration-200 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                            Convert & Download
+                        </button>
+                    </div>
+                </div>
+
+                <canvas id="image-canvas" class="hidden"></canvas>
+            </div>
+
+            <!-- 2. YouTube Thumbnail Downloader Tool -->
+            <div id="tool-youtube" class="tool-content hidden tool-card p-6 sm:p-8 rounded-xl">
+                <h2 class="text-2xl font-bold text-gray-700 mb-4">YouTube Thumbnail & Asset Downloader</h2>
+                <p class="text-gray-500 mb-6">Extract high-resolution thumbnails from any YouTube video URL.</p>
+
+                <div class="space-y-4">
+                    <div>
+                        <label for="youtube-url" class="block text-sm font-medium text-gray-700 mb-1">Enter YouTube Video URL</label>
+                        <input type="url" id="youtube-url" placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500" />
+                    </div>
+                    
+                    <button onclick="getYouTubeThumbnails()" class="w-full bg-emerald-600 text-white p-3 rounded-lg font-semibold hover:bg-emerald-700 transition duration-200 focus:outline-none focus:ring-4 focus:ring-emerald-500 focus:ring-opacity-50">
+                        Generate Thumbnails
+                    </button>
+                </div>
+
+                <!-- Thumbnail Results Display -->
+                <div id="youtube-results" class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Results will be injected here -->
+                </div>
+                
+            </div>
+
+            <!-- Global Message/Error Box -->
+            <div id="message-box" class="fixed bottom-4 right-4 p-4 rounded-lg shadow-lg text-white hidden z-50 transition-opacity duration-300" role="alert"></div>
+
+        </main>
+    </div>
+
+    <script>
+        // Global state for the image converter
+        let selectedFile = null;
+
+        /**
+         * Utility function to display temporary messages (like success or error)
+         * @param {string} message The message to display.
+         * @param {string} type 'success' or 'error'.
+         */
+        function showMessage(message, type = 'success') {
+            const box = document.getElementById('message-box');
+            box.textContent = message;
+            box.className = 'fixed bottom-4 right-4 p-4 rounded-lg shadow-lg text-white z-50 transition-opacity duration-300';
+            
+            if (type === 'error') {
+                box.classList.add('bg-red-600');
+            } else {
+                box.classList.add('bg-emerald-600');
+            }
+            
+            box.classList.remove('hidden');
+            setTimeout(() => {
+                box.classList.add('opacity-0');
+                setTimeout(() => box.classList.add('hidden', 'opacity-100'), 300);
+            }, 3000);
+        }
+
+        /**
+         * Utility function to copy text to clipboard without using alert/confirm.
+         * @param {string} elementId ID of the element whose text content should be copied.
+         */
+        function copyToClipboard(elementId) {
+            const textToCopy = document.getElementById(elementId).textContent;
+            
+            // Create a temporary textarea element
+            const tempInput = document.createElement('textarea');
+            tempInput.value = textToCopy;
+            document.body.appendChild(tempInput);
+            
+            // Select and copy the text
+            tempInput.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showMessage('Copied to clipboard!');
+                } else {
+                    showMessage('Copy failed. Please manually select and copy the text.', 'error');
+                }
+            } catch (err) {
+                showMessage('Copy failed. Please manually select and copy the text.', 'error');
+            }
+            
+            // Clean up
+            document.body.removeChild(tempInput);
+        }
+
+
+        /**
+         * Switches the visible tool tab.
+         * @param {string} toolName 'converter' or 'youtube'.
+         */
+        function switchTab(toolName) {
+            const toolContents = document.querySelectorAll('.tool-content');
+            toolContents.forEach(content => content.classList.add('hidden'));
+
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => button.classList.remove('active'));
+
+            document.getElementById(`tool-${toolName}`).classList.remove('hidden');
+            document.getElementById(`tab-${toolName}`).classList.add('active');
+        }
+
+        // --- Image Converter Logic ---
+
+        /**
+         * Handles the file input selection and updates the UI.
+         */
+        function handleImageSelection(event) {
+            selectedFile = event.target.files[0];
+            const fileNameDisplay = document.getElementById('selected-file-name');
+            const convertButton = document.getElementById('convert-button');
+            // Supported MIME types
+            const validTypes = ['image/png', 'image/jpeg', 'image/webp'];
+
+            if (selectedFile) {
+                // Check if the selected file type is one of the supported formats
+                if (!validTypes.includes(selectedFile.type)) {
+                    showMessage('Unsupported file type. Please select PNG, JPEG, or WebP.', 'error');
+                    selectedFile = null;
+                    fileNameDisplay.textContent = '';
+                    convertButton.disabled = true;
+                    convertButton.classList.replace('bg-emerald-600', 'bg-gray-400');
+                    convertButton.classList.replace('hover:bg-emerald-700', 'hover:bg-gray-400');
+                    return;
+                }
+                
+                fileNameDisplay.textContent = `Selected: ${selectedFile.name} (${(selectedFile.size / 1024 / 1024).toFixed(2)} MB)`;
+                convertButton.disabled = false;
+                convertButton.classList.replace('bg-gray-400', 'bg-emerald-600');
+                convertButton.classList.replace('hover:bg-gray-400', 'hover:bg-emerald-700');
+            } else {
+                fileNameDisplay.textContent = '';
+                convertButton.disabled = true;
+                convertButton.classList.replace('bg-emerald-600', 'bg-gray-400');
+                convertButton.classList.replace('hover:bg-emerald-700', 'hover:bg-gray-400');
+            }
+        }
+
+        /**
+         * Converts the selected image to the chosen format (JPG/PNG/WEBP) and triggers download.
+         */
+        function convertImage() {
+            if (!selectedFile) {
+                showMessage('Please select an image file first.', 'error');
+                return;
+            }
+
+            const canvas = document.getElementById('image-canvas');
+            const outputFormat = document.getElementById('output-format').value;
+            
+            // Determine the correct extension based on the output MIME type
+            let outputExtension = 'png'; 
+            if (outputFormat === 'image/jpeg') {
+                outputExtension = 'jpg';
+            } else if (outputFormat === 'image/webp') {
+                outputExtension = 'webp';
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    // Set canvas dimensions to match the image
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    
+                    const ctx = canvas.getContext('2d');
+                    // For JPEG/WebP to PNG conversion, we ensure no background is set 
+                    // to maintain transparency if the original image supported it (like WebP).
+                    // For JPEG/PNG to JPEG/WebP, canvas handles the conversion.
+                    ctx.drawImage(img, 0, 0);
+
+                    // Export the canvas content as the selected format
+                    // Quality is set to 0.9 for lossy formats (JPEG/WebP). PNG ignores this.
+                    const dataURL = canvas.toDataURL(outputFormat, 0.9);
+
+                    // Create a temporary link element to trigger the download
+                    const a = document.createElement('a');
+                    // Safely strip the original extension and add the new one
+                    const fileNameBase = selectedFile.name.split('.').slice(0, -1).join('.');
+                    a.download = `${fileNameBase}.${outputExtension}`;
+                    a.href = dataURL;
+                    
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+
+                    showMessage(`Successfully converted and started download for ${outputExtension.toUpperCase()}!`);
+                };
+                img.src = e.target.result;
+            };
+
+            reader.onerror = function() {
+                showMessage('Error reading the file.', 'error');
+            };
+
+            reader.readAsDataURL(selectedFile);
+        }
+
+        // --- YouTube Thumbnail Downloader Logic (Unchanged) ---
+
+        /**
+         * Extracts the YouTube video ID from various URL formats.
+         * @param {string} url The full YouTube URL.
+         * @returns {string|null} The video ID or null if not found.
+         */
+        function extractVideoID(url) {
+            const patterns = [
+                /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})/, // youtu.be/id
+                /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/, // youtube.com/watch?v=id
+                /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/, // youtube.com/embed/id
+                /(?:https?:\/\/)?(?:www\.)?youtube\.com\/v\/([a-zA-Z0-9_-]{11})/ // youtube.com/v/id
+            ];
+            
+            for (const pattern of patterns) {
+                const match = url.match(pattern);
+                if (match && match[1]) {
+                    return match[1];
+                }
+            }
+            return null;
+        }
+
+        /**
+         * Generates and displays thumbnail download links.
+         */
+        function getYouTubeThumbnails() {
+            const urlInput = document.getElementById('youtube-url');
+            const url = urlInput.value.trim();
+            const resultsContainer = document.getElementById('youtube-results');
+            resultsContainer.innerHTML = '';
+
+            if (!url) {
+                showMessage('Please enter a YouTube URL.', 'error');
+                return;
+            }
+
+            const videoId = extractVideoID(url);
+
+            if (!videoId) {
+                showMessage('Could not find a valid YouTube video ID in the provided URL.', 'error');
+                return;
+            }
+
+            // Base URL for YouTube thumbnails
+            const base = `https://img.youtube.com/vi/${videoId}/`;
+            
+            // List of available thumbnail qualities and their descriptions
+            const qualities = [
+                { file: 'maxresdefault.jpg', name: 'Maximum Resolution (1280x720/1920x1080)', note: 'Highest available quality, often 1280x720.' },
+                { file: 'sddefault.jpg', name: 'Standard Definition (640x480)', note: 'SD Quality (640px wide).' },
+                { file: 'hqdefault.jpg', name: 'High Quality (480x360)', note: 'HQ Quality (480px wide).' },
+                { file: 'mqdefault.jpg', name: 'Medium Quality (320x180)', note: 'MQ Quality (320px wide).' },
+                { file: 'default.jpg', name: 'Default Quality (120x90)', note: 'Lowest quality placeholder.' }
+            ];
+
+            let html = '';
+
+            qualities.forEach(q => {
+                const fullUrl = base + q.file;
+                html += `
+                    <div class="p-4 border border-gray-200 rounded-xl bg-white space-y-2">
+                        <p class="font-bold text-gray-700">${q.name}</p>
+                        <p class="text-xs text-gray-500">${q.note}</p>
+                        <!-- Image Preview (use placeholder since we can't guarantee the image exists/loads from this domain) -->
+                        <img src="${fullUrl}" onerror="this.onerror=null; this.src='https://placehold.co/400x225/e0e0e0/555555?text=Image+Not+Found';" alt="${q.name} Thumbnail" class="w-full h-auto rounded-lg shadow-md object-cover">
+                        <a href="${fullUrl}" target="_blank" download="${videoId}-${q.file}" class="inline-block w-full text-center bg-emerald-500 text-white p-2 rounded-lg font-semibold hover:bg-emerald-600 transition">
+                            Download ${q.file.split('.')[0].toUpperCase()}
+                        </a>
+                    </div>
+                `;
+            });
+
+            resultsContainer.innerHTML = html;
+            showMessage('Thumbnails generated! Scroll down to see options.');
+        }
+
+
+        // --- Initialization ---
+
+        window.onload = function() {
+            // Check if there is a hash in the URL to pre-select a tab
+            const hash = window.location.hash.replace('#', '');
+            // Now checks for 'converter' or 'youtube'
+            if (['converter', 'youtube'].includes(hash)) {
+                switchTab(hash);
+            } else {
+                switchTab('converter'); // Default to Image Converter
+            }
+        };
+
+        // Initialize default tab when script loads
+        switchTab('converter');
+    </script>
+</body>
+</html>
+    
+  </body>
+  
+</html>
