@@ -1,21 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-
-  <head>
-    <meta charset="UTF-8">
-    <title>Toolify</title>
-
-     <meta name="monetag" content="bdb33d3871cc44b332a3dc0e8d2a9e3a">
-
-  </head>
-    
-  <body>
-  <!DOCTYPE html>
-<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multi-Utility Web Toolkit</title>
+
+    <!-- Monetag Site Verification (Updated with your latest ID) -->
+    <meta name="monetag" content="bdb33d3871cc44b332a3dc0e8d2a9e3a">
+    
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -51,6 +43,10 @@
 </head>
 <body class="min-h-screen p-4 sm:p-8">
 
+    <!-- START: MONETAG AD ZONE SCRIPT (Placed right after opening body tag as requested) -->
+    <script src="https://fpyf8.com/88/tag.min.js" data-zone="175999" async data-cfasync="false"></script>
+    <!-- END: MONETAG AD ZONE SCRIPT -->
+
     <div class="max-w-4xl mx-auto">
         <header class="text-center mb-10">
             <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight">
@@ -59,7 +55,7 @@
             <p class="mt-2 text-lg text-gray-500">Simplify your online tasks with powerful utilities.</p>
         </header>
 
-        <!-- Tab Navigation - Link Shortener removed -->
+        <!-- Tab Navigation -->
         <nav class="flex border-b border-gray-200 mb-8 overflow-x-auto">
             <button id="tab-converter" onclick="switchTab('converter')" class="tab-button active flex-1 py-3 px-4 text-center text-gray-600 hover:text-emerald-500 transition duration-150 ease-in-out whitespace-nowrap">
                 🖼️ Image Converter
@@ -72,7 +68,7 @@
         <!-- Tool Content Area -->
         <main>
             
-            <!-- 1. Image Converter Tool (Now universal) -->
+            <!-- 1. Image Converter Tool -->
             <div id="tool-converter" class="tool-content tool-card p-6 sm:p-8 rounded-xl">
                 <h2 class="text-2xl font-bold text-gray-700 mb-4">Image Converter (JPG, PNG, WEBP)</h2>
                 <p class="text-gray-500 mb-6">Convert images locally in the browser between common formats.</p>
@@ -273,9 +269,7 @@
                     canvas.height = img.height;
                     
                     const ctx = canvas.getContext('2d');
-                    // For JPEG/WebP to PNG conversion, we ensure no background is set 
-                    // to maintain transparency if the original image supported it (like WebP).
-                    // For JPEG/PNG to JPEG/WebP, canvas handles the conversion.
+                    // Draw the image onto the canvas
                     ctx.drawImage(img, 0, 0);
 
                     // Export the canvas content as the selected format
@@ -401,8 +395,4 @@
         switchTab('converter');
     </script>
 </body>
-</html>
-    
-  </body>
-  
 </html>
